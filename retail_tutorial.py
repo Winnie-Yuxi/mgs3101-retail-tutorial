@@ -58,10 +58,10 @@ def load_and_inspect_data():
     print(f"2010-11: {df_2010['Customer ID'].isna().sum():,}")
 
     return df_2009, df_2010
-#2009‑10：541,909rows；2010‑11：519,879rows
-#InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, Customer ID, Country
-#InvoiceDate is read as string, need to convert to datetime
-#An empty Customer ID indicates that the guest has completed the checkout. If the rows with empty Customer IDs are directly deleted, all these genuine transactions will be discarded, and the calculated total sales will be smaller than the actual business sales.
+#1. 2009‑10：541,909rows；2010‑11：519,879rows
+#2. InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, Customer ID, Country
+#3. InvoiceDate is read as string, need to convert to datetime
+#4. An empty Customer ID indicates that the guest has completed the checkout. If the rows with empty Customer IDs are directly deleted, all these genuine transactions will be discarded, and the calculated total sales will be smaller than the actual business sales.
 
 def clean_and_prepare_data(df_2009, df_2010):
     print("\n" + "=" * 70)
@@ -94,3 +94,33 @@ def clean_and_prepare_data(df_2009, df_2010):
     print(f"Net revenue: ${df_clean['Revenue'].sum():,.2f}")
 
     return df_clean, df_cancelled
+#1. ~ in the "is_cancellation" section represents the negation operation, keeping the rows that are not cancellations / returns
+#2. Quantity > 0 excludes returns; Price > 0 excludes the 0-yuan free records to ensure that all are actual sales.
+#3. If negative refund rows are mixed in, the total revenue will be negatively deducted, resulting in incorrect revenue statistics.
+#4. .copy() creates an independent copy to avoid the "SettingWithCopyWarning" warning when making subsequent modifications and to prevent modifying the original parent data.
+
+def make_recommendations(df_clean, df_cancelled):
+    print("\n" + "=" * 70)
+    print("STEP 5: THREE DATA‑BACKED RECOMMENDATIONS")
+    print("=" * 70)
+
+    total_revenue = df_clean['Revenue'].sum()
+    guest_revenue = df_clean.loc[~df_clean['Is_Registered'], 'Revenue'].sum()
+    guest_share = guest_revenue / total_revenue * 100
+    return_rate = len(df_cancelled) / (len(df_clean) + len(df_cancelled)) * 100
+
+    print(
+        f"1. Guest checkout conversion: Guest sales generated ${guest_revenue:,.2f} "
+        f"({guest_share:.1f}% of clean revenue). Offer a registration incentive "
+        "after checkout to capture customer information for follow‑up marketing."
+    )
+    print(
+        f"2. Return monitoring: {len(df_cancelled):,} rows ({return_rate:.1f}% of "
+        "all raw transactions) were cancellations or returns. Review frequent "
+        "returns to identify potential product or fulfillment problems."
+    )
+    print(
+        f"3. Revenue protection: Clean sales total ${total_revenue:,.2f}. Keep the "
+        "positive‑quantity and positive‑price checks in future reports so zero‑price "
+        "or negative transactions do not distort revenue."
+    )
