@@ -124,3 +124,14 @@ def make_recommendations(df_clean, df_cancelled):
         "positive‑quantity and positive‑price checks in future reports so zero‑price "
         "or negative transactions do not distort revenue."
     )
+
+    def main():
+    print("MGS 3101 RETAIL PANDAS TUTORIAL")
+    demo_pandas_fundamentals()
+    df_2009, df_2010 = load_and_inspect_data()
+    df_clean, df_cancelled = clean_and_prepare_data(df_2009, df_2010)
+    make_recommendations(df_clean, df_cancelled)
+
+
+if __name__ == '__main__':
+    main()
