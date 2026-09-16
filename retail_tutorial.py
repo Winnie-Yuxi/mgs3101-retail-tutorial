@@ -38,3 +38,24 @@ def demo_pandas_fundamentals():
 #2. OrderID1004：2 * 350.00 = 700.00
 #3. OrderID1004(700); Order1002：8*45=360, less than 500
 #4. If change to ">=600", Order1004 remains
+
+def load_and_inspect_data():
+    print("\n" + "=" * 70)
+    print("STEP 3: LOAD AND INSPECT RETAIL DATA")
+    print("=" * 70)
+
+    df_2009 = pd.read_csv('Retail 2009-10.csv')
+    df_2010 = pd.read_csv('Retail 2010-11.csv')
+
+    print(f"2009-10 records: {len(df_2009):,}")
+    print(f"2010-11 records: {len(df_2010):,}")
+    print(f"Columns: {df_2009.columns.tolist()}")
+    print("\nFirst three rows from 2009-10:")
+    print(df_2009.head(3))
+
+    print("\nMissing Customer IDs:")
+    print(f"2009-10: {df_2009['Customer ID'].isna().sum():,}")
+    print(f"2010-11: {df_2010['Customer ID'].isna().sum():,}")
+
+    return df_2009, df_2010
+#
