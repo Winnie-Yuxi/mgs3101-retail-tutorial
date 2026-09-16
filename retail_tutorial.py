@@ -125,7 +125,7 @@ def make_recommendations(df_clean, df_cancelled):
         "or negative transactions do not distort revenue."
     )
 
-    def main():
+def main():
     print("MGS 3101 RETAIL PANDAS TUTORIAL")
     demo_pandas_fundamentals()
     df_2009, df_2010 = load_and_inspect_data()
@@ -134,4 +134,4 @@ def make_recommendations(df_clean, df_cancelled):
 
 
 if __name__ == '__main__':
-    main()
+    main()    
